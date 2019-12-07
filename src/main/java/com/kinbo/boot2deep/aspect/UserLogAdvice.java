@@ -5,14 +5,13 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Map;
 
 @Component
 @Aspect
@@ -40,7 +39,7 @@ public class UserLogAdvice {
     public void doAfter(JoinPoint joinPoint){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();
-        UserLog userLog = getUserLogAnnotation(joinPoint);
+        UserLog userLog = getUserLogAnnotationBetter(joinPoint);
         System.out.println(userLog.module()+ " - " + userLog.operate());
     }
 
@@ -56,6 +55,12 @@ public class UserLogAdvice {
             }
         }
         return null;
+    }
+
+
+    private UserLog getUserLogAnnotationBetter(JoinPoint point)  {
+        Method targetMethod = ((MethodSignature) point.getSignature()).getMethod();
+        return targetMethod.getAnnotation(UserLog.class);
     }
 
 }
