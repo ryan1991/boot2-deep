@@ -17,16 +17,11 @@ import java.lang.reflect.Method;
 @Aspect
 public class UserLogAdvice {
 
-
-
     /**
-     * Pointcut定义切点
-     * public修饰符的
-     * 返回值任意  com.xiaoi.recommend.controller包下面的任意类的任意方法任意参数
+     * 切到@UserLog注解
      */
     @Pointcut("@annotation(com.kinbo.boot2deep.aspect.UserLog)")
     public void userLog(){
-
     }
 
     @Before("userLog()")
@@ -42,8 +37,6 @@ public class UserLogAdvice {
         UserLog userLog = getUserLogAnnotationBetter(joinPoint);
         System.out.println(userLog.module()+ " - " + userLog.operate());
     }
-
-
 
     private UserLog getUserLogAnnotation(JoinPoint point){
         Class targetClass = point.getTarget().getClass();
